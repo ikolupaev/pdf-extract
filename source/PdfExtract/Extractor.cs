@@ -14,6 +14,16 @@ namespace PdfExtract
         private Action<string, object[]> _logger = (message, args) => Trace.WriteLine(string.Format(message, args));
         private readonly Lazy<TemporaryFile> _pdfToTextExecutable = new Lazy<TemporaryFile>(ReadPdfToText);
         private bool _disposed;
+        private readonly string commandLineOptions = "";
+
+        public Extractor(string commandLineOptions)
+        {
+            this.commandLineOptions = commandLineOptions;
+        }
+
+        public Extractor()
+        {
+        }
 
         private static TemporaryFile ReadPdfToText()
         {
@@ -43,7 +53,7 @@ namespace PdfExtract
                 var processStartInfo = new ProcessStartInfo(" \"" + _pdfToTextExecutable.Value.Info.FullName + " \"")
                 {
                     UseShellExecute = false,
-                    Arguments = " \"" + sourceFile.Info + "\" \"" + destinationFile.Info + "\"",
+                    Arguments = commandLineOptions + " \"" + sourceFile.Info + "\" \"" + destinationFile.Info + "\"",
                     WindowStyle = ProcessWindowStyle.Maximized,
                     CreateNoWindow = true,
                     LoadUserProfile = false,
